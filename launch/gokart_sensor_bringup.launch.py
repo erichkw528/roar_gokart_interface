@@ -52,9 +52,7 @@ def generate_launch_description():
         / "launch"
         / "zed.launch.py"
     )
-    zed_config_file_path: Path = Path(base_path / "param" / "zed2i_config.yaml")
     assert zed_file_path.exists(), f"{zed_file_path} does not exist"
-    assert zed_config_file_path.exists(), f"{zed_config_file_path} does not exist"
     zed_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(zed_file_path.as_posix())
     )
@@ -79,7 +77,6 @@ def generate_launch_description():
 
     # localization systems
     ld.add_action(gps_launch)
-    ld.add_action(vehicle_urdf_launch)
 
     # hardware control
     ld.add_action(arduino_launch)
