@@ -61,13 +61,20 @@ def generate_launch_description():
     Localization System
     """
     # GPS 
-    gps_launch_path: Path = Path(get_package_share_directory('septentrio_gnss_driver')) / 'launch' / 'roar.launch.py'
+    # gps_launch_path: Path = Path(get_package_share_directory('septentrio_gnss_driver')) / 'launch' / 'roar.launch.py'
+    # assert gps_launch_path.exists(), f"[{gps_launch_path}] does not exist"
+    # gps_launch = IncludeLaunchDescription(PythonLaunchDescriptionSource(gps_launch_path.as_posix()))
+    # septentrio_interface_path: Path = Path(get_package_share_directory('roar_septentrio_interface')) / 'launch' / 'interface.launch.py'
+    # assert septentrio_interface_path.exists(), f"[{septentrio_interface_path}] does not exist"
+    # gps_interface = IncludeLaunchDescription(PythonLaunchDescriptionSource(septentrio_interface_path.as_posix()))
+
+    gps_launch_path: Path = Path(get_package_share_directory('point_one_gps_driver')) / 'launch' / 'point_one_gps_driver.launch.py'
     assert gps_launch_path.exists(), f"[{gps_launch_path}] does not exist"
     gps_launch = IncludeLaunchDescription(PythonLaunchDescriptionSource(gps_launch_path.as_posix()))
+    gps_interface_path: Path = Path(get_package_share_directory('roar_pointone_nav_interface')) / 'launch' / 'interface.launch.py'
+    assert gps_interface_path.exists(), f"[{gps_interface_path}] does not exist"
+    gps_interface = IncludeLaunchDescription(PythonLaunchDescriptionSource(gps_interface_path.as_posix()))
 
-    septentrio_interface_path: Path = Path(get_package_share_directory('roar_septentrio_interface')) / 'launch' / 'interface.launch.py'
-    assert septentrio_interface_path.exists(), f"[{septentrio_interface_path}] does not exist"
-    septentrio_interface_launch = IncludeLaunchDescription(PythonLaunchDescriptionSource(septentrio_interface_path.as_posix()))
 
     """
     Hardware Control
@@ -81,7 +88,7 @@ def generate_launch_description():
 
     # localization systems
     ld.add_action(gps_launch)
-    ld.add_action(septentrio_interface_launch)
+    ld.add_action(gps_interface)
 
     # hardware control
     ld.add_action(arduino_launch)
