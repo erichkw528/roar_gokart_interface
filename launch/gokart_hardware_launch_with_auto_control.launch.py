@@ -46,7 +46,10 @@ def generate_launch_description():
         executable="roar_gokart_converter",
         namespace="converter_node",
         output="screen",
-        remappings=[("/converter_node/roar_control", "/roar/vehicle/control"),("/converter_node/gokart_control","/vehicle/control")]
+        remappings=[("/converter_node/roar_control", "/roar/vehicle/control"),
+                    ("/converter_node/gokart_control","/roar/gokart/control"),
+                    ("/converter_node/roar_status", "/roar/vehicle/status"),
+                    ("/converter_node/gokart_status", "/roar/gokart/status"),]
     )
 
 

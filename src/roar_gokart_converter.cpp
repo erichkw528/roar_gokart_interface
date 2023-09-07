@@ -6,6 +6,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "roar_msgs/msg/vehicle_control.hpp"
 #include "roar_gokart_msgs/msg/ego_vehicle_control.hpp"
+#include "roar_msgs/msg/vehicle_status.hpp"
+#include "roar_gokart_msgs/msg/vehicle_status.hpp"
 
 using namespace std::chrono_literals;
 
@@ -22,6 +24,10 @@ public:
             "roar_control", 10, std::bind(&RoarGoKartConverter::control_callback, this, std::placeholders::_1));
 
         control_publisher_ = this->create_publisher<roar_gokart_msgs::msg::EgoVehicleControl>("gokart_control", 10);
+
+        status_sub_ = this->create_subscription<roar_gokart_msgs::msg::VehicleStatus>(
+            "gokart_status", 10, std::bind(&RoarGoKartConverter::status_sub_callback, this, std::placeholders::_1));
+        status_pub_ = this->create_publisher<roar_msgs::msg::VehicleStatus>("roar_status", 10);
     }
 
 private:
@@ -36,8 +42,22 @@ private:
         control_publisher_->publish(output_msg);
     }
 
+    void status_sub_callback(const roar_gokart_msgs::msg::VehicleStatus::SharedPtr msg)
+    {
+        roar_msgs::msg::VehicleStatus output_msg = roar_msgs::msg::VehicleStatus();
+        output_msg.header = msg->header;
+
+        output_msg.speed = msg->speed;
+        output_msg.steering_angle_deg = msg->angle;
+
+        status_pub_->publish(output_msg);
+    }
+
     rclcpp::Subscription<roar_msgs::msg::VehicleControl>::SharedPtr control_subscriber;
     rclcpp::Publisher<roar_gokart_msgs::msg::EgoVehicleControl>::SharedPtr control_publisher_;
+
+    rclcpp::Subscription<roar_gokart_msgs::msg::VehicleStatus>::SharedPtr status_sub_;
+    rclcpp::Publisher<roar_msgs::msg::VehicleStatus>::SharedPtr status_pub_;
 };
 
 int main(int argc, char *argv[])
